@@ -1,0 +1,428 @@
+#include <stdio.h>
+#include "includes.h"
+#include "altera_avalon_pio_regs.h"
+
+/* Definition of Task Stacks */
+#define   TASK_STACKSIZE       2048
+
+
+OS_STK    changement_stk[TASK_STACKSIZE];
+
+OS_STK    vehicule12_stk[TASK_STACKSIZE];
+OS_STK    vehicule22_stk[TASK_STACKSIZE];
+OS_STK    vehicule32_stk[TASK_STACKSIZE];
+
+OS_STK    vehicule41_stk[TASK_STACKSIZE];
+OS_STK    vehicule51_stk[TASK_STACKSIZE];
+
+OS_EVENT *FEU1, *FEU2, *MUX1, *MUX2;
+
+INT8U erreur;
+
+/* Definition of Task Priorities */
+#define VEHICULE_PRIORITY      10
+
+#define CHANGEMENT_PRIORITY    9
+
+/* Processus de traversee voie 2 */
+void vehicule12(void* pdata)
+{
+	while(1){
+
+
+				/* Prendre la sémaphore FEU2*/
+				OSSemPend(FEU2,0,&erreur);
+				printf("vehicule 1 prendre V(FEU2)\n");
+				if(erreur != 0){
+					printf("erreur lors de P(FEU2)\n");
+					printf("l'erreur est :%d\n",erreur);
+				}
+				/* Prendre la sémaphore MUX2*/
+				OSSemPend(MUX2,0,&erreur);
+				if(erreur != 0){
+							printf("erreur lors de P(MUX2)\n");
+							printf("l'erreur est :%d\n",erreur);
+						}
+				printf("Vehicule 1 sur Voie 2\n");
+
+				/* Afficher le numero de feu en vert et de véhicule*/
+				IOWR_ALTERA_AVALON_PIO_DATA(SEG7_BASE,2393178105);
+
+				/* Animation des leds*/
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,1);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,3);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,7);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,15);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,31);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,63);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,127);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,511);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,1023);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,2047);
+				OSTimeDlyHMSM(0, 0, 0, 200);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,0);
+
+
+				/* Rendre la sémaphore MUX2*/
+				erreur = OSSemPost(MUX2);
+				if(erreur != 0){
+							printf("erreur lors de V(MUX2)\n");
+							printf("l'erreur est :%d\n",erreur);
+						}
+
+				printf("vehicule 1 rendre V(FEU2)\n");
+
+				/* Rendre la sémaphore FEU2*/
+				erreur = OSSemPost(FEU2);
+				if(erreur != 0){
+							printf("erreur lors de V(FEU2)\n");
+							printf("l'erreur est :%d\n",erreur);
+						}
+
+				/* Tuer la tâche*/
+				OSTaskDel(OS_PRIO_SELF);
+	}
+
+}
+
+void vehicule22(void* pdata)
+{
+	while(1){
+
+				OSSemPend(FEU2,0,&erreur);
+				printf("vehicule 2 prendre V(FEU2)\n");
+				if(erreur != 0){
+					printf("erreur lors de P(FEU2)\n");
+					printf("l'erreur est :%d\n",erreur);
+				}
+
+				OSSemPend(MUX2,0,&erreur);
+				if(erreur != 0){
+							printf("erreur lors de P(MUX2)\n");
+							printf("l'erreur est :%d\n",erreur);
+						}
+
+				printf("Vehicule 2 sur Voie 2\n");
+
+				IOWR_ALTERA_AVALON_PIO_DATA(SEG7_BASE,2393178020);
+
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,1);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,3);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,7);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,15);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,31);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,63);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,127);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,511);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,1023);
+				OSTimeDlyHMSM(0, 0, 0, 500);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,2047);
+				OSTimeDlyHMSM(0, 0, 0, 200);
+				IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,0);
+
+
+
+				erreur = OSSemPost(MUX2);
+				if(erreur != 0){
+							printf("erreur lors de V(MUX2)\n");
+							printf("l'erreur est :%d\n",erreur);
+						}
+
+
+				printf("vehicule 2 rendre V(FEU2)\n");
+
+				erreur = OSSemPost(FEU2);
+				if(erreur != 0){
+							printf("erreur lors de V(FEU2)\n");
+							printf("l'erreur est :%d\n",erreur);
+						}
+
+				OSTaskDel(OS_PRIO_SELF);
+	}
+}
+
+void vehicule32(void* pdata)
+{
+	while(1){
+			OSSemPend(FEU2,0,&erreur);
+			printf("vehicule 3 prendre V(FEU2)\n");
+			if(erreur != 0){
+				printf("erreur lors de P(FEU2)\n");
+				printf("l'erreur est :%d\n",erreur);
+			}
+
+			OSSemPend(MUX2,0,&erreur);
+			if(erreur != 0){
+						printf("erreur lors de P(MUX2)\n");
+						printf("l'erreur est :%d\n",erreur);
+					}
+
+			printf("Vehicule 3 sur Voie 2\n");
+
+			IOWR_ALTERA_AVALON_PIO_DATA(SEG7_BASE,2393178032);
+
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,1);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,3);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,7);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,15);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,31);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,63);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,127);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,511);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,1023);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,2047);
+			OSTimeDlyHMSM(0, 0, 0, 200);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,0);
+
+			erreur = OSSemPost(MUX2);
+			if(erreur != 0){
+						printf("erreur lors de V(MUX2)\n");
+						printf("l'erreur est :%d\n",erreur);
+					}
+
+			printf("vehicule 3 rendre V(FEU2)\n");
+
+			erreur = OSSemPost(FEU2);
+			if(erreur != 0){
+						printf("erreur lors de V(FEU2)\n");
+						printf("l'erreur est :%d\n",erreur);
+					}
+			OSTaskDel(OS_PRIO_SELF);
+	}
+}
+
+
+
+
+/* Processus de traversee voie 1 */
+void vehicule41(void* pdata)
+{
+	while(1){
+			OSSemPend(FEU1,0,&erreur);
+			printf("vehicule 4 prendre P(FEU1)\n");
+			if(erreur != 0){
+				printf("erreur lors de P(FEU1)\n");
+				printf("l'erreur est :%d\n",erreur);
+			}
+
+			OSSemPend(MUX1,0,&erreur);
+			if(erreur != 0){
+						printf("erreur lors de P(MUX1)\n");
+						printf("l'erreur est :%d\n",erreur);
+					}
+
+			printf("Vehicule 4 sur Voie 1\n");
+
+			IOWR_ALTERA_AVALON_PIO_DATA(SEG7_BASE,2398748569);
+
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,1);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,3);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,7);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,15);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,31);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,63);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,127);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,511);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,1023);
+			OSTimeDlyHMSM(0, 0, 0, 500);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,2047);
+			OSTimeDlyHMSM(0, 0, 0, 200);
+			IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,0);
+
+			erreur = OSSemPost(MUX1);
+			if(erreur != 0){
+						printf("erreur lors de V(MUX1)\n");
+						printf("l'erreur est :%d\n",erreur);
+					}
+
+			printf("vehicule 4 rendre V(FEU1)\n");
+
+			erreur = OSSemPost(FEU1);
+			if(erreur != 0){
+						printf("erreur lors de V(FEU1)\n");
+						printf("l'erreur est :%d\n",erreur);
+					}
+			OSTaskDel(OS_PRIO_SELF);
+	}
+}
+
+void vehicule51(void* pdata)
+{
+	while(1){
+		OSSemPend(FEU1,0,&erreur);
+		printf("vehicule 5 prendre P(FEU1)\n");
+		if(erreur != 0){
+			printf("erreur lors de P(FEU1)\n");
+			printf("l'erreur est :%d\n",erreur);
+		}
+
+		OSSemPend(MUX1,0,&erreur);
+		if(erreur != 0){
+					printf("erreur lors de P(MUX1)\n");
+					printf("l'erreur est :%d\n",erreur);
+				}
+
+		printf("Vehicule 5 sur Voie 1\n");
+
+		IOWR_ALTERA_AVALON_PIO_DATA(SEG7_BASE,2398748562);
+
+		IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,1);
+		OSTimeDlyHMSM(0, 0, 0, 500);
+		IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,3);
+		OSTimeDlyHMSM(0, 0, 0, 500);
+		IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,7);
+		OSTimeDlyHMSM(0, 0, 0, 500);
+		IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,15);
+		OSTimeDlyHMSM(0, 0, 0, 500);
+		IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,31);
+		OSTimeDlyHMSM(0, 0, 0, 500);
+		IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,63);
+		OSTimeDlyHMSM(0, 0, 0, 500);
+		IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,127);
+		OSTimeDlyHMSM(0, 0, 0, 500);
+		IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,511);
+		OSTimeDlyHMSM(0, 0, 0, 500);
+		IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,1023);
+		OSTimeDlyHMSM(0, 0, 0, 500);
+		IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,2047);
+		OSTimeDlyHMSM(0, 0, 0, 200);
+		IOWR_ALTERA_AVALON_PIO_DATA(LEDS_BASE,0);
+
+		erreur = OSSemPost(MUX1);
+		if(erreur != 0){
+					printf("erreur lors de V(MUX1)\n");
+					printf("l'erreur est :%d\n",erreur);
+				}
+
+		printf("vehicule 5 rendre V(FEU1)\n");
+
+		erreur = OSSemPost(FEU1);
+		if(erreur != 0){
+					printf("erreur lors de V(FEU1)\n");
+					printf("l'erreur est :%d\n",erreur);
+				}
+		OSTaskDel(OS_PRIO_SELF);
+
+	}
+}
+
+void changement(void *pdata)
+{
+	while(1){
+
+		printf("FEU2 en rouge et FEU1 en vert)\n");
+
+		/* Affichage F1 sur les 7 segments*/
+		IOWR_ALTERA_AVALON_PIO_DATA(SEG7_BASE,2398748671);
+		OSTimeDlyHMSM(0, 0, 7, 0);
+
+		OSSemPend(FEU1,0,&erreur);
+		if(erreur != 0){
+							printf("erreur lors de P(FEU1)\n");
+							printf("l'erreur est :%d\n",erreur);
+						}
+
+		erreur = OSSemPost(FEU2);
+		if(erreur != 0){
+							printf("erreur lors de V(FEU2)\n");
+							printf("l'erreur est :%d\n",erreur);
+						}
+
+		printf("FEU2 en vert et FEU1 en rouge)\n");
+
+		/* Affichage F2 sur les 7 segments*/
+		IOWR_ALTERA_AVALON_PIO_DATA(SEG7_BASE,2393178111);
+		OSTimeDlyHMSM(0, 0, 7, 0);
+
+		OSSemPend(FEU2,0,&erreur);
+		if(erreur != 0){
+							printf("erreur lors de P(FEU2)\n");
+							printf("l'erreur est :%d\n",erreur);
+						}
+
+		erreur = OSSemPost(FEU1);
+		if(erreur != 0){
+							printf("erreur lors de V(FEU1)\n");
+							printf("l'erreur est :%d\n",erreur);
+						}
+	}
+}
+
+/* The main function creates tasks and starts multi-tasking */
+int main(void)
+{
+
+	FEU1 = OSSemCreate(1);
+	FEU2 = OSSemCreate(0);
+
+	MUX1 = OSSemCreate(1);
+	MUX2 = OSSemCreate(1);
+
+	/* Creation des tâches et attribuer à chacune une priorité */
+	OSTaskCreate(changement,
+			      NULL,
+			      (void *)&changement_stk[TASK_STACKSIZE-1],
+			      CHANGEMENT_PRIORITY);
+
+	OSTaskCreate(vehicule41,
+                  NULL,
+                  (void *)&vehicule41_stk[TASK_STACKSIZE-1],
+                  VEHICULE_PRIORITY);
+
+	OSTaskCreate(vehicule12,
+	          	  NULL,
+	          	  (void *)&vehicule12_stk[TASK_STACKSIZE-1],
+	          	  VEHICULE_PRIORITY+1);
+
+	OSTaskCreate(vehicule51,
+	          	  NULL,
+	          	  (void *)&vehicule51_stk[TASK_STACKSIZE-1],
+	          	  VEHICULE_PRIORITY+2);
+
+	OSTaskCreate(vehicule22,
+	          	  NULL,
+	          	  (void *)&vehicule22_stk[TASK_STACKSIZE-1],
+	          	  VEHICULE_PRIORITY+3);
+
+	OSTaskCreate(vehicule32,
+		          NULL,
+		          (void *)&vehicule32_stk[TASK_STACKSIZE-1],
+		          VEHICULE_PRIORITY+4);
+
+  OSStart();
+  return 0;
+}
