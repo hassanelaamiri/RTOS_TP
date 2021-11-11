@@ -1,4 +1,4 @@
-<h3>I. Objectif</h3>
+<h2>I. Objectif</h2>
 
 L’objectif de ce TP est d’afficher sur les 7 segments le numéro de feu qui est en vert et 
 le numéro de véhicule traverse la voie.
@@ -25,7 +25,7 @@ durée de traversement de la voie.
 <h5>Remarque : </h5><p>nous supposant que la durée « m » de changement des feux est supérieur 
 de la durée « n » nécessaire pour que le véhicule traverse la voie.</p>
 
-<h3>II. Création du projet logiciel MicroC / OS-II</h3>
+<h2>II. Création du projet logiciel MicroC / OS-II</h2>
 
 Dans cette section, nous créons une nouvelle application Nios II et des projets BSP à 
 l'aide du modèle de projet Hello MicroC/OS-II disponible dans Nios II SBT for Eclipse.
@@ -51,7 +51,7 @@ Quartus II Programmer (figure 2)</p>
 
 ![image](https://user-images.githubusercontent.com/93779828/141336352-daf637c2-f203-4213-8586-8a1e6f90195c.png)
 
-<h3>III. Programmation</h3>
+<h2>III. Programmation</h2>
 <p>Dans ce TP, on aura besoin de deux Sémaphores (MUTEX1 et MUTEX2) pour protéger 
 la voie 1 et 2 pour qu’un véhicule traverse à la fois, et deux Sémaphores (FEU1 et FEU2) 
 pour chaque voie.</p>
@@ -184,7 +184,7 @@ l’OS.<p>
 auparavant une priorité selon notre cahier de charge. Ensuite on lance notre programme 
 OS avec la commande OSStart().<p>
 
-<h3>IV. Conception</h3>
+<h2>IV. Conception</h2>
 <p>Pour compiler le code on se rend dans Project > Build All.
 Après que le code successivement compilé, on se rend sur Run > Run As pour l’exécuter 
 sur notre cible FPGA.</p>
@@ -199,7 +199,7 @@ seconde:</p>
   
 https://user-images.githubusercontent.com/93779828/141356284-86ae1c6f-f3e1-4041-9412-6a2f21f758ae.mp4
 
-<h3>V.	Question & Réponse </h3>
+<h2>V.	Question & Réponse </h2>
 
 <h4>1. Pourquoi et que fait la fonction OSTaskdel(…)</h4>
 <p>Cette fonction permet de tuer la tâche une fois exécutée sinon elle ne sortira jamais de 
