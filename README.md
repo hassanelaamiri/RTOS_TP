@@ -197,5 +197,23 @@ sur notre cible FPGA.</p>
 au lieu de juste mettre la tâche en non-activable, on allume une LED chaque 0.5 
 seconde:</p>
   
-![](https://media.tenor.com/images/a0a693dec7660a6df1d2937b057a7b71/tenor.gif)
-![myfile](https://media.tenor.com/images/a0a693dec7660a6df1d2937b057a7b71/tenor.gif)
+https://user-images.githubusercontent.com/93779828/141356284-86ae1c6f-f3e1-4041-9412-6a2f21f758ae.mp4
+
+<h3>V.	Question & Réponse </h3>
+
+<h4>1. Pourquoi et que fait la fonction OSTaskdel(…)</h4>
+<p>Cette fonction permet de tuer la tâche une fois exécutée sinon elle ne sortira jamais de 
+la boucle infinie.</p>
+<h4>2. Que se passe-t-il lorsque vous diminuez le délai m jusqu’à 50 ms ?</h4>
+<p>On constate qu’en présence des véhicules même en diminuant m, le délai minimum pour 
+le changement des feux est n (le délai de traversement de la voie). C-à-d : la priorité est 
+pour le délai de traversement de la voie (Video 2)</p>
+
+https://user-images.githubusercontent.com/93779828/141356709-09a6a176-34c9-4142-96b5-146eb794895d.mp4
+
+<h4>3. Que veut erreur dans OSSemPend(…) ?</h4>
+<p>La variable erreur indique la valeur reçoit lors l’exécution de cette commande, et d’après 
+cette valeur, on est capable de savoir où se trouve le problème exactement.</p>
+Si l’erreur vaut 0 donc tout se passe bien.
+<h4>4. Que se passe-t-il lorsque vous exécutez OSTimeDlyHMSM(…)</h4>
+<p>La tâche entre dans l'état de blocage (non activable) pendant un certain temps.</p>
