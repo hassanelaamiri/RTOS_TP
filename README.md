@@ -1,6 +1,19 @@
-<h2>I. Objectif</h2>
+<h2>I. Problématique </h2>
 
-L’objectif de ce TP est d’afficher sur les 7 segments le numéro de feu qui est en vert et 
+<p>La circulation au carrefour de deux voies est réglée par des feux verts et rouges. Quand le
+feu est vert pour une voie, les voitures qui y circulent peuvent traverser le carrefour; quand le
+feu est rouge, elle doivent attendre ... Les feux de chaque voie passent alternativement du vert
+au rouge, chaque couleur étant maintenue pendant un temps fini m.</p>
+<p>Les arrivées sur les deux voies sont distribuées de maniére quelconque.</p>
+<p>Le fonctionnement de ce systéme est représenté par un ensemble de trois processus paralléles.</p>
+<p>La traversé du carrefour par une voiture de la voie i (i = 1, 2) correspond à l’execution
+d’une procedure ”TRAVERSEEi” par le processus associé à cette voiture.</p>
+<p>Un processus CHANGEMENT gère la commande des feux.</p>
+
+
+<h2>II. Objectif</h2>
+
+L’objectif de ce TP est de programmer la carte de FPGA Altera de façon à afficher sur les 7 segments le numéro de feu qui est en vert et 
 le numéro de véhicule traverse la voie.
 Pendant le traversement, les LEDs clignotent pour une durée « n » correspond à la 
 durée de traversement de la voie.
